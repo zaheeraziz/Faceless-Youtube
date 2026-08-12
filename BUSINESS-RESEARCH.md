@@ -36,6 +36,8 @@ Scores are directional (1–5) until channel-level view and upload data are coll
 
 No reliable public source exposes channel RPM. Third-party earnings estimates are too speculative for scoring. All five can support mid-roll ads in 10–20 minute videos; geography, watch time, season, and advertiser suitability will matter more than the topic label alone.
 
+The detailed scenario model is maintained in [BUSINESS-SCALE-MODEL.md](./BUSINESS-SCALE-MODEL.md). Its $5 RPM working case is only an assumption: roughly 1 million monthly views would be required for $5,000 in monthly gross revenue.
+
 ### Recommendation
 
 Run a low-cost concept test between:
@@ -45,9 +47,17 @@ Run a low-cost concept test between:
 
 Create three titles and thumbnail concepts for each. Produce only the strongest pilot from each concept before committing to a channel identity.
 
-## Current hypothesis
+## Refined channel hypothesis
 
-City/country history through local food is the best first candidate. It combines proven food, travel, and history interest while offering a clearer angle than broad history. Sports has high demand but presents the greatest footage-rights risk.
+**City history through food and architecture** is the best first candidate. Food provides familiarity and search appeal; architecture provides striking visual storytelling; history connects them into one narrative. Repeated geometry becomes the channel's recognizable production signature. Sports remains deferred because footage-rights risk is higher.
+
+### Positioning statement
+
+> Discover how cities were shaped through the food people ate, the buildings they raised, and the geometry connecting both.
+
+### Editorial rule
+
+Each episode needs one central historical question. Food and architecture are evidence used to answer it—not separate list segments.
 
 ## Validation notes: food + place/history
 

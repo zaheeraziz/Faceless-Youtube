@@ -11,6 +11,12 @@ Build a faceless educational YouTube business primarily monetized through ads. A
 - Keep business research separate from tool research.
 - Use evidence, not creator income claims or isolated viral examples.
 - Do not assume AI production is a competitive advantage.
+- The owner tends to jump into tools and production before validating the business. The mentor must stop this and require evidence before authorizing build work.
+- Do not use the owner's voice; narration must use a licensed AI voice or a hired narrator.
+- Preferred visual identity: complex images gradually constructed from simple geometric shapes, then transitioned into 3D.
+- Claude must create the thumbnail concepts and finished thumbnail variants; do not make Canva part of the core workflow.
+- Claude must perform the final text-based video edit through the code-based project; do not make Descript part of the core workflow.
+- Every episode must pass an independent second-model audit using Gemini or OpenAI for factual quality, copyright risk, and overall quality before publication.
 
 ## Interests considered
 
@@ -27,16 +33,31 @@ Build a faceless educational YouTube business primarily monetized through ads. A
 - TikTok, Instagram Reels, Facebook Reels, and YouTube Shorts should distribute adapted clips and test hooks.
 - Faceless is a format, not the value proposition.
 - Original research, narrative judgment, and visual execution must distinguish the channel from mass-produced AI content.
+- Slow, layered shape animation should become a recognizable visual signature when it supports the story.
 - Sports history is deferred because footage and rights risks are higher.
 
 ## Niche finalists
 
-1. **Cities/countries through local food:** differentiated and visually rich; entry success for new faceless channels is not yet strongly proven.
+1. **Cities through food and architecture:** explain a place's history through its local cuisine, landmark architecture, and recurring geometric patterns. This is differentiated and visually rich; entry success for new faceless channels is not yet strongly proven.
 2. **Overlooked historical mysteries:** stronger anecdotal evidence of small-channel discovery; avoid graphic/sensational treatment that harms advertiser suitability.
 
 ## Next recommended work
 
-Create three title and thumbnail concepts for each finalist. Score click appeal, research depth, production cost, copyright risk, and repeatability. Produce one pilot per concept before locking the channel identity.
+Validate the refined city-history concept before buying tools or producing a pilot. Establish audience evidence, competitive entry evidence, repeatable topics, monetization logic, and explicit stop/go thresholds. Only then create title/thumbnail tests and authorize one minimum-cost pilot.
+
+## Business-before-tools gate
+
+Do not begin subscriptions, tool setup, branding, channel creation, automation, or full video production until all are complete:
+
+1. Define the target viewer and the recurring problem/desire served.
+2. Analyze at least 10 relevant channels, emphasizing newer/smaller entrants and recent long-form performance.
+3. Identify at least 30 episode ideas that fit the same positioning without stretching it.
+4. Demonstrate packaging demand with title/thumbnail concept testing or strong comparable-video evidence.
+5. Establish plausible revenue economics using conservative assumptions—not creator income claims.
+6. Estimate pilot and ongoing cost, time, and break-even requirements.
+7. Define measurable go, revise, and stop thresholds before publishing.
+
+Tool research may continue as documentation, but implementation is blocked until this gate passes.
 
 ## Guardrails
 
