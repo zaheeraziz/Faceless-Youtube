@@ -1,5 +1,7 @@
 # Faceless YouTube Business Research
 
+> Current two-concept decision research is maintained in [NICHE-COMPARISON.md](./NICHE-COMPARISON.md). Astronomy/cosmology is now the leading hypothesis, while city history through food and architecture remains the challenger. Neither has passed the production gate.
+
 ## Preliminary concept comparison
 
 Scores are directional (1–5) until channel-level view and upload data are collected.

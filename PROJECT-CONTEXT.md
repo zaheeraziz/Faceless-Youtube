@@ -38,12 +38,12 @@ Build a faceless educational YouTube business primarily monetized through ads. A
 
 ## Niche finalists
 
-1. **Cities through food and architecture:** explain a place's history through its local cuisine, landmark architecture, and recurring geometric patterns. This is differentiated and visually rich; entry success for new faceless channels is not yet strongly proven.
-2. **Overlooked historical mysteries:** stronger anecdotal evidence of small-channel discovery; avoid graphic/sensational treatment that harms advertiser suitability.
+1. **Astronomy/cosmology through geometric animation:** leading passion-business hypothesis; broad demand and strong visual fit, but high competition and uneven small-channel economics.
+2. **Cities through food and architecture:** differentiated challenger; adjacent demand is proven, but the exact combined format remains weakly validated.
 
 ## Next recommended work
 
-Validate the refined city-history concept before buying tools or producing a pilot. Establish audience evidence, competitive entry evidence, repeatable topics, monetization logic, and explicit stop/go thresholds. Only then create title/thumbnail tests and authorize one minimum-cost pilot.
+Run a packaging and economics comparison between astronomy/cosmology and city history before buying tools or producing a pilot. Astronomy goes first because of founder passion and stronger direct demand; this is not yet a final niche decision.
 
 ## Business-before-tools gate
 
