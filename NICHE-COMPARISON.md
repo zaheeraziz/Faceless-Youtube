@@ -4,7 +4,7 @@ Research started August 2026. Search-result observations are discovery evidence,
 
 ## Executive conclusion
 
-**Advance astronomy/cosmology as the leading passion-business hypothesis, but do not commit the channel yet.** It has clearer direct audience demand, an excellent fit with geometric/3D animation, a global evergreen library, and lower dependence on third-party footage. However, the SciMind case shows that reaching 20K+ subscribers does not guarantee enough recurring views to support expensive production.
+**Advance astronomy and the human history of reading the sky as the leading passion-business hypothesis, but do not commit the channel yet.** It connects star navigation, history of astronomy, knowledge exchange, instruments, modern astrophysics, and NASA through one promise. It has clear audience demand and excellent geometric/3D potential. However, the SciMind case shows that reaching 20K+ subscribers does not guarantee enough recurring views to support expensive production.
 
 Keep city history through food and architecture as the comparison concept. It has stronger differentiation, but the exact combined format remains less validated than its separate adjacent categories.
 

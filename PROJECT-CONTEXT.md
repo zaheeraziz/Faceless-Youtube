@@ -14,6 +14,7 @@ Build a faceless educational YouTube business primarily monetized through ads. A
 - The owner tends to jump into tools and production before validating the business. The mentor must stop this and require evidence before authorizing build work.
 - Do not use the owner's voice; narration must use a licensed AI voice or a hired narrator.
 - Preferred visual identity: complex images gradually constructed from simple geometric shapes, then transitioned into 3D.
+- Refined astronomy thesis: how humanity learned to read the sky—from star navigation and historical knowledge across Greek, Indian, Muslim, European, and other traditions to modern astrophysics and NASA. Episodes remain modern, mystery-driven visual stories rather than lectures.
 - Claude must create the thumbnail concepts and finished thumbnail variants; do not make Canva part of the core workflow.
 - Claude must perform the final text-based video edit through the code-based project; do not make Descript part of the core workflow.
 - Every episode must pass an independent second-model audit using Gemini or OpenAI for factual quality, copyright risk, and overall quality before publication.
@@ -43,7 +44,7 @@ Build a faceless educational YouTube business primarily monetized through ads. A
 
 ## Next recommended work
 
-Run a packaging and economics comparison between astronomy/cosmology and city history before buying tools or producing a pilot. Astronomy goes first because of founder passion and stronger direct demand; this is not yet a final niche decision.
+Externally test the top astronomy package—**Before GPS, the Sky Was the Map**—against its two title and thumbnail variants. Then estimate pilot cost and break-even views. Do not produce the video until the package passes and the economics are acceptable.
 
 ## Business-before-tools gate
 

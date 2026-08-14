@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#071426"/>
+  <g fill="#b9d9ff" opacity=".75">
+    <circle cx="92" cy="92" r="3"/><circle cx="214" cy="155" r="2"/><circle cx="340" cy="74" r="3"/>
+    <circle cx="490" cy="182" r="2"/><circle cx="620" cy="87" r="2"/><circle cx="760" cy="145" r="3"/>
+    <circle cx="925" cy="75" r="2"/><circle cx="1090" cy="185" r="3"/><circle cx="1184" cy="96" r="2"/>
+    <circle cx="145" cy="305" r="2"/><circle cx="405" cy="320" r="3"/><circle cx="690" cy="290" r="2"/>
+  </g>
+  <g fill="none" stroke="#4da8da" stroke-width="6" opacity=".7">
+    <path d="M140 520 Q640 55 1135 205"/>
+    <path d="M180 555 Q650 155 1080 255"/>
+  </g>
+  <circle cx="972" cy="152" r="25" fill="#f8d66d" opacity=".18"/>
+  <circle cx="972" cy="152" r="10" fill="#fff4b0"/>
+  <path d="M972 170 L770 535" stroke="#f8d66d" stroke-width="5" stroke-dasharray="14 12"/>
+  <g fill="#020810">
+    <path d="M0 585 Q330 550 650 590 T1280 575 V720 H0Z"/>
+    <path d="M600 570 L810 570 L760 628 L635 628Z"/>
+    <path d="M690 565 V405 L700 405 V565Z"/>
+    <path d="M700 420 L790 525 L700 525Z"/>
+  </g>
+  <text x="70" y="650" fill="#ffffff" font-family="Arial, sans-serif" font-size="68" font-weight="700">THE SKY WAS THE MAP</text>
+</svg>
