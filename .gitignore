@@ -1,1 +1,6 @@
-.DS_Store
+*.DS_Store
+Codex/prototypes/**/frames*/
+Codex/prototypes/**/*_temp_voice.aiff
+Codex/prototypes/**/*temp_voice*.aiff
+Codex/audio/*.aiff
+__pycache__/

@@ -18,6 +18,8 @@ Build a faceless educational YouTube business primarily monetized through ads. A
 - Claude must create the thumbnail concepts and finished thumbnail variants; do not make Canva part of the core workflow.
 - Claude must perform the final text-based video edit through the code-based project; do not make Descript part of the core workflow.
 - Every episode must pass an independent second-model audit using Gemini or OpenAI for factual quality, copyright risk, and overall quality before publication.
+- Each technical/AI episode should create two assets: a video for audience growth and a GitHub artifact for owner visibility. When appropriate, include a small build-along project or viewer challenge that helps learners practice the concept and invites them to share their work publicly.
+- If an episode has a GitHub project, include an early hook that tells viewers the project is available, invites them to build their own version, and asks them to share/comment with what they changed.
 
 ## Interests considered
 
@@ -67,3 +69,4 @@ Tool research may continue as documentation, but implementation is blocked until
 - Disclose realistic synthetic media when platform rules require it.
 - Treat public RPM and earnings estimates as unreliable unless backed by first-party analytics.
 - Separate facts, estimates, assumptions, and confidence levels.
+- For build-along content, do not overpromise production readiness. Label sample projects as educational unless they include tests, docs, and safety review.
