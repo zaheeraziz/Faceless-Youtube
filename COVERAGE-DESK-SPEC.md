@@ -2,7 +2,7 @@
 
 Design spec for the first automated stage of video production: script writing. Draft → review → ground → feedback → reconcile → arbitrate → finalize or flag. Git-backed twin of the working Artifact; update both together.
 
-Status: **designed, Phase 0 scaffolding in progress.** See "Owner decision" below for why this exists despite the business-before-tools gate in `PROJECT-CONTEXT.md` still being open.
+Status: **Phase 0 scaffolding committed. Phase 1 hand-run in progress, blocked on `claude -p` auth.** See "Owner decision" below for why this exists despite the business-before-tools gate in `PROJECT-CONTEXT.md` still being open. See section 9 for the Phase 1 findings log.
 
 ## 1. Owner decision — proceeding ahead of the business gate
 
@@ -29,11 +29,11 @@ Codex and Claude agreeing on a claim is not the same as the claim being true —
 
 ## 4. Tools — verified headless, no API keys
 
-All three CLIs run on subscription/OAuth login, not metered API keys, confirmed working headless on this Mac:
+All three CLIs run on subscription/OAuth login, not metered API keys — status as of the Phase 1 hand-run (see section 9 for the live findings):
 
-- **Codex CLI** (`codex exec`) — requires `--skip-git-repo-check` outside a trusted/git-repo directory; not needed once run from inside this repo.
-- **Claude Code** (`claude -p`) — headless mode is permission-gated by default; checkpoint calls need `--allowedTools "Bash,Read,Edit"`, not the bare `claude -p` form.
-- **Antigravity CLI** (`agy -p`) — successor to Gemini CLI, which sunset for free/consumer use. Installer left the binary off PATH; add `~/.local/bin` to the shell profile if `agy: command not found` shows up again.
+- **Codex CLI** (`codex exec`) — requires `--skip-git-repo-check` outside a trusted/git-repo directory; not needed once run from inside this repo. Also defaults to a **read-only sandbox**; writing the draft file needs `-s workspace-write`. Confirmed working headless.
+- **Claude Code** (`claude -p`) — headless mode is permission-gated by default; checkpoint calls need `--allowedTools "Bash,Read,Edit"`, not the bare `claude -p` form, **and the prompt must be piped via stdin, not passed positionally after `--allowedTools`** (see section 9). **Not currently authenticated for headless use** — `claude -p` returns "Not logged in" even from a plain terminal, contradicting this section's original claim. Needs `claude setup-token` (or interactive `/login`) before Step 2/3/5 can run.
+- **Antigravity CLI** (`agy -p`) — successor to Gemini CLI, which sunset for free/consumer use. Installer left the binary off PATH; add `~/.local/bin` to the shell profile if `agy: command not found` shows up again. Not yet exercised in the Phase 1 hand-run — Step 2.5 hasn't been reached.
 
 ## 5. Ownership — Claude is the sole GitHub operator, and owns all software work
 
@@ -88,6 +88,19 @@ Auth lives outside the repo entirely (`~/.codex`, `~/.claude`, `~/.gemini`); `.g
 | 3 | Owner | First unattended run end to end — confirm it either auto-finalizes or flags, and that the push notification actually arrives. |
 | 4 | Claude | Harden: retries/timeouts around headless CLI calls, clearer errors, a switch to Vertex if Antigravity's free tier gets rate-limited. |
 | later | — | Extend the same shape (draft → review → ground → feedback → reconcile → arbitrate) to voiceover, editing, and thumbnails. Not scheduled. |
+
+## 9. Phase 1 findings log
+
+Live notes from the first hand-run, topic: *"The Life of a Packet — What Actually Happens on the Network When Your AI Agent Does a Task"* (episode folder: `Projects/Life-of-a-Packet/`). Grounded in the owner's own Cisco Live 2026 (Las Vegas) session on this topic. Updated as each step is actually run — this is the evidence Phase 2's orchestrator gets built from, not a prediction of it.
+
+**Step 1 (Codex draft) — done.** `codex exec --skip-git-repo-check -s workspace-write "<prompt>"` produced `Projects/Life-of-a-Packet/Codex/draft-v01.md` (13 scenes, ~2,500 words) on the second attempt. First attempt failed silently on the write — Codex's sandbox defaults to read-only, so `-s workspace-write` is required, not optional. Codex also self-corrected a claim from the owner's own notes ("every agent is its own IP endpoint" isn't quite right — agents typically share a host IP; NAT/PAT tracks per-flow state, not per-agent identity) rather than repeating it uncritically, which is the behavior the spec's uncertainty rule is meant to produce.
+
+**Step 2 (Claude review) — blocked.** Two issues surfaced, in order:
+
+1. `claude -p --allowedTools "Bash,Read,Edit" "<prompt>"` fails: `--allowedTools` greedily consumes the next argv as more comma-separated tool rules instead of treating it as the prompt, so the prompt text gets shredded into garbage permission rules and `claude -p` then errors with no prompt provided. **Fix:** pipe the prompt via stdin instead of passing it positionally — `cat prompt.md | claude -p --allowedTools "Bash,Read,Edit"`.
+2. With that fixed, `claude -p` returns `Not logged in · Please run /login` — reproduced both from inside a Claude Code session's Bash tool and from a plain Terminal window (`echo hi | claude -p`), so this isn't a nested-session artifact. This section's earlier claim that `claude -p` was "confirmed working headless on this Mac" was stale/wrong. **Fix, not yet applied:** run `claude setup-token` (headless-appropriate, unlike interactive browser `/login`) and retry.
+
+Steps 2.5 through 5 haven't been attempted yet — blocked behind the Step 2 auth fix.
 
 ---
 
