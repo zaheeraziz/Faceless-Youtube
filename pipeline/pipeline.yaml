@@ -1,0 +1,45 @@
+# Coverage Desk pipeline config — tunable, not secret.
+# No API keys live here or anywhere in this repo: every CLI call below runs
+# on subscription/OAuth login (ChatGPT, Claude, Google), not a metered key.
+# See COVERAGE-DESK-SPEC.md section 4 for how each was verified headless.
+
+models:
+  draft: codex            # Step 1  — codex exec
+  review: claude           # Step 2  — claude -p
+  ground: antigravity      # Step 2.5 — agy -p   (fallback: vertex-gemini)
+  feedback: claude         # Step 3  — claude -p
+  reconcile: codex         # Step 4  — codex exec
+  arbitrate: claude        # Step 5  — claude -p --allowedTools "Bash,Read,Edit"
+
+cli:
+  codex:
+    command: "codex exec --skip-git-repo-check"
+  claude:
+    command: "claude -p --allowedTools \"Bash,Read,Edit\""
+  antigravity:
+    command: "agy -p"
+  vertex_gemini_fallback:
+    enabled: false   # flip on if antigravity's free tier gets rate-limited at volume
+
+timeouts_seconds:
+  draft: 300
+  review: 180
+  ground_per_claim: 60
+  feedback: 120
+  reconcile: 240
+  arbitrate: 120
+
+notify:
+  on_flag:
+    push: true
+    in_session: true
+
+paths:
+  episode_root: "Projects/{slug}"
+  codex_dir: "Projects/{slug}/Codex"
+  claude_dir: "Projects/{slug}/Claude"
+  shared_dir: "Projects/{slug}/Shared"
+
+github:
+  operator: claude          # single writer — see COVERAGE-DESK-SPEC.md section 5
+  pr_as_flag: true          # step 5b opens a PR instead of only notifying

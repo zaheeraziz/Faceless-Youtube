@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Coverage Desk Feedback",
+  "description": "Output of Step 2-3 (Claude reviews + writes feedback), after Step 2.5 grounding has been folded in.",
+  "type": "object",
+  "required": ["episode_slug", "draft_version", "generated_by", "points"],
+  "properties": {
+    "episode_slug": { "type": "string", "description": "matches the Projects/<slug> folder name" },
+    "draft_version": { "type": "string", "description": "e.g. v01, matching the repo's version-naming rule" },
+    "generated_by": { "type": "string", "enum": ["claude"] },
+    "points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "location", "issue", "suggested_fix"],
+        "properties": {
+          "id": { "type": "string", "description": "e.g. fb-01, referenced by decision.json" },
+          "category": { "type": "string", "enum": ["accuracy", "language"] },
+          "location": { "type": "string", "description": "scene or line reference in the draft" },
+          "issue": { "type": "string" },
+          "suggested_fix": { "type": "string" },
+          "grounded": {
+            "type": "object",
+            "description": "present only for category=accuracy points that went through Step 2.5",
+            "required": ["checked_by", "verdict"],
+            "properties": {
+              "checked_by": { "type": "string", "enum": ["antigravity", "vertex-gemini"] },
+              "verdict": { "type": "string", "enum": ["supported", "contradicted", "unverifiable"] },
+              "source": { "type": "string" },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

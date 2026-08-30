@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Coverage Desk Decision Log",
+  "description": "Output of Step 4 (Codex reconciles) and Step 5 (Claude arbitrates), one entry per feedback point.",
+  "type": "object",
+  "required": ["episode_slug", "draft_version", "decisions"],
+  "properties": {
+    "episode_slug": { "type": "string" },
+    "draft_version": { "type": "string" },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["feedback_id", "codex_response", "status"],
+        "properties": {
+          "feedback_id": { "type": "string", "description": "matches a feedback.json point id" },
+          "codex_response": { "type": "string", "enum": ["agree", "disagree"] },
+          "codex_reason": { "type": "string", "description": "required when codex_response=disagree" },
+          "claude_arbitration": {
+            "type": "object",
+            "description": "present only when codex_response=disagree",
+            "required": ["verdict", "reasoning"],
+            "properties": {
+              "verdict": { "type": "string", "enum": ["concur", "still_disagree"] },
+              "reasoning": { "type": "string" }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["resolved_agree", "resolved_concur", "flagged"],
+            "description": "resolved_agree = 4a, resolved_concur = 5a, flagged = 5b (human decides)"
+          }
+        }
+      }
+    }
+  }
+}
