@@ -1,0 +1,128 @@
+{
+  "episode_slug": "Life-of-a-Packet",
+  "draft_version": "v01",
+  "generated_by": "claude",
+  "points": [
+    {
+      "id": "fb-01",
+      "category": "language",
+      "location": "Scene 1-2",
+      "issue": "Narration is written in the owner's first-person voice, including a named real-world credential (\"This walkthrough is adapted from my Cisco Live 2026 session in Las Vegas\" and \"I have spent years looking at systems from the network side\"). House style (PROJECT-CONTEXT.md) requires the owner not appear as the narrator's voice/identity; narration must read as the licensed AI voice or hired narrator, not the owner autobiographically. Owner has confirmed the Cisco Live 2026 session is real and was used only to validate that this topic is well-grounded material for the pipeline, not as an instruction to write the script autobiographically.",
+      "suggested_fix": "Rewrite Scenes 1-2 (and any later callback to this framing) to drop the named conference, city, year, and \"I've spent years...\" credential claim. Keep the narrator as the illustrative architect persona informed by that real material, without claiming to personally be its source. E.g. replace \"I have spent years looking at systems from the network side\" and the Cisco Live sentence with a persona-neutral framing such as \"This walkthrough follows a real journey through the systems view of the network, one an AI engineer rarely sees end to end.\""
+    },
+    {
+      "id": "fb-02",
+      "category": "language",
+      "location": "Scene 1 / Scene 13",
+      "issue": "Continuity error: Scene 1 establishes the person who complained about network speed as \"an AI engineer,\" but Scene 13's closing line calls back to \"the architect's question\" instead of the engineer's question. The role reference does not match across the setup and payoff.",
+      "suggested_fix": "Change Scene 13's closing line to reference the engineer set up in Scene 1 (e.g. \"Then you will be able to answer the engineer's question.\"), or rename the Scene 1 character to \"architect\" if that role is preferred, so setup and payoff agree."
+    },
+    {
+      "id": "fb-03",
+      "category": "accuracy",
+      "location": "Scene 3",
+      "issue": "Claim that application data is \"protected with TLS and carried over TCP, or over QUIC using UDP, depending on the service and protocol negotiated\" is a plausible but ungrounded technical generalization about TCP/QUIC/TLS negotiation. This is a Codex-style hedge (\"depending on...\") that reads as confident despite not being checked against a primary source in this hand-run.",
+      "suggested_fix": "Send this claim through a real Step 2.5 grounding pass (e.g. against RFC 9000/QUIC and RFC 8446/TLS 1.3) before this episode ships. If grounding confirms it, no script change is needed beyond noting it was checked."
+    },
+    {
+      "id": "fb-04",
+      "category": "accuracy",
+      "location": "Scene 4",
+      "issue": "Claim that \"broadband is often asymmetric\" and the implied prevalence of asymmetric upload/download plans for AI agent users is asserted without a cited source. Plausible but ungrounded — another Codex-style hedge worth verifying rather than accepting on confidence alone.",
+      "suggested_fix": "Ground this against current broadband/ISP statistics (e.g. FCC or OECD broadband reports) before shipping. If supported, keep as-is; if the asymmetry is less universal than implied, soften \"often\" to a more precise qualifier."
+    },
+    {
+      "id": "fb-05",
+      "category": "accuracy",
+      "location": "Scene 5",
+      "issue": "Claim that \"every software agent is not necessarily its own IP endpoint... Ten agents on one laptop may share one IP. But every distinct network flow can consume connection-tracking, firewall, and NAT/PAT state.\"",
+      "suggested_fix": "No factual correction needed; claim is supported by NAT/PAT and NAT-terminology standards. Optional: no script change required.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "IETF RFC 3022 (Traditional IP NAT/NAPT, Sections 2.2, 3); IETF RFC 2663 (NAT Terminology, Section 4.1.2)"
+      }
+    },
+    {
+      "id": "fb-06",
+      "category": "accuracy",
+      "location": "Scene 6",
+      "issue": "Claim that \"a traceroute may reveal some of those hops, but not every device answers probes, and the displayed path is not a perfect latency ledger\" describes traceroute/ICMP behavior without a cited source. Plausible but ungrounded in this hand-run.",
+      "suggested_fix": "Ground this against traceroute/ICMP behavior references (e.g. RFC 792 for ICMP, or standard traceroute documentation covering ICMP rate-limiting and filtered hops) before this episode ships."
+    },
+    {
+      "id": "fb-07",
+      "category": "accuracy",
+      "location": "Scene 7",
+      "issue": "Claim: \"BGP does not simply choose the geographically shortest line on a map.\"",
+      "suggested_fix": "No factual correction needed; claim is supported by the BGP decision process specification. No script change required.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "IETF RFC 4271 (BGP-4, Section 9.1, Decision Process)"
+      }
+    },
+    {
+      "id": "fb-08",
+      "category": "accuracy",
+      "location": "Scene 7",
+      "issue": "Claim that \"DNS can influence which cloud edge or region you approach\" (DNS-based geo-routing) is asserted without a cited source. Plausible but ungrounded — worth a real grounding pass before shipping.",
+      "suggested_fix": "Ground this against provider documentation on DNS-based geo-routing/latency-based routing (e.g. AWS Route 53 geoproximity/latency routing, or a general anycast/GeoDNS reference) before this episode ships."
+    },
+    {
+      "id": "fb-09",
+      "category": "accuracy",
+      "location": "Scene 8",
+      "issue": "Claim: certificate pinning \"can prevent or prohibit\" TLS inspection. Grounding confirms the mechanism (pinning rejects the middlebox's re-signed certificate and aborts the TLS handshake) is accurate, but the script's phrasing is slightly imprecise about what actually happens.",
+      "suggested_fix": "Light precision edit, not a factual correction: consider rephrasing to make clear the connection fails outright rather than silently routing around inspection, e.g. \"certificate pinning ... can cause the connection to fail rather than be inspected.\"",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "Palo Alto Networks PAN-OS Administrator Guide (\"Certificate Pinning Issues in SSL Decryption\"); OWASP Certificate and Public Key Pinning Cheat Sheet",
+        "note": "Mechanism is that pinning rejects the middlebox's re-signed cert and aborts the TLS handshake — \"prevent\" is accurate, but the script could be more precise that the connection fails rather than silently routing around inspection. Suggest a light precision edit, not a factual correction."
+      }
+    },
+    {
+      "id": "fb-10",
+      "category": "language",
+      "location": "Scene 9, on-screen text",
+      "issue": "Trailing space in on-screen text bullet: \"Service mesh? \" has an extra space before the line break.",
+      "suggested_fix": "Remove the trailing space: \"Service mesh?\""
+    },
+    {
+      "id": "fb-11",
+      "category": "language",
+      "location": "Scenes 9-13",
+      "issue": "Aphorism density: too many quotable one-liners stacked back to back (e.g. \"Same URL. Different geography.\", \"the network got slow\" may really mean \"the healthy backend moved\", \"'The network is slow' is not a diagnosis. It is the beginning of an investigation.\"). The cumulative effect reads as over-polished rather than naturally paced.",
+      "suggested_fix": "Thin out the aphorisms across Scenes 9-13 — keep the strongest 1-2 (likely the Scene 13 closer) and rewrite the others in plainer descriptive language so the remaining line-worthy moments land harder."
+    },
+    {
+      "id": "fb-12",
+      "category": "language",
+      "location": "Scenes 3-11",
+      "issue": "Template repetition: nearly every scene from 3 through 11 follows the same explain-then-hedge rhythm (introduce a component, then qualify with \"but this varies,\" \"is not universal,\" \"depends on the service\"). The repeated structure reads as AI-generated rather than edited for variety.",
+      "suggested_fix": "Vary the scene structure across Scenes 3-11 — mix in scenes that open with the hedge, scenes that skip the hedge entirely, and scenes that use a different rhetorical device (question, contrast, anecdote) so the pattern isn't mechanically repeated every single scene."
+    },
+    {
+      "id": "fb-13",
+      "category": "language",
+      "location": "Scenes 5-10",
+      "issue": "Pacing risk: this stretch reads as a dense technical checklist (NAT/PAT, ISP routing, DNS/BGP, edge/TLS inspection, load balancing/failover, VPC/service mesh) with limited narrative propulsion. House style prefers engaging storytelling over lecture delivery.",
+      "suggested_fix": "Introduce a through-line or recurring narrative beat across Scenes 5-10 (e.g. periodically returning to the AI engineer's original question, or tracking a single concrete request's fate) to break up the checklist feel and keep momentum between technical beats."
+    },
+    {
+      "id": "fb-14",
+      "category": "accuracy",
+      "location": "Scene 10",
+      "issue": "Claim that \"poorly coordinated retries can multiply traffic during an incident and make congestion worse\" (retry storms) is asserted without a cited source. Plausible but ungrounded in this hand-run.",
+      "suggested_fix": "Ground this against retry-storm/retry-amplification references (e.g. AWS Builders' Library \"Timeouts, retries and backoff with jitter\" or Google SRE Book chapter on cascading failures) before this episode ships."
+    },
+    {
+      "id": "fb-15",
+      "category": "accuracy",
+      "location": "Scene 10",
+      "issue": "Description of a service mesh (\"sidecar proxies, mutual TLS, retries, and telemetry\") is asserted without a cited source. Plausible but ungrounded — a Codex-style summary worth verifying before shipping.",
+      "suggested_fix": "Ground this against service mesh documentation (e.g. Istio or Linkerd architecture docs) before this episode ships to confirm the feature list is accurate and not missing/misattributing capabilities."
+    }
+  ]
+}

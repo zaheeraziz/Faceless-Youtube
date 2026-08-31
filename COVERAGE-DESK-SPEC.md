@@ -2,7 +2,7 @@
 
 Design spec for the first automated stage of video production: script writing. Draft → review → ground → feedback → reconcile → arbitrate → finalize or flag. Git-backed twin of the working Artifact; update both together.
 
-Status: **Phase 0 scaffolding committed. Phase 1 hand-run in progress, blocked on `claude -p` auth.** See "Owner decision" below for why this exists despite the business-before-tools gate in `PROJECT-CONTEXT.md` still being open. See section 9 for the Phase 1 findings log.
+Status: **Phase 0 scaffolding committed. Phase 1 hand-run complete through Step 4 (auto-finalized) — awaiting the owner's Step 6 read before locking to `Shared/`.** See "Owner decision" below for why this exists despite the business-before-tools gate in `PROJECT-CONTEXT.md` still being open. See section 9 for the Phase 1 findings log.
 
 ## 1. Owner decision — proceeding ahead of the business gate
 
@@ -17,11 +17,14 @@ Status: **Phase 0 scaffolding committed. Phase 1 hand-run in progress, blocked o
 | 2.5 | Antigravity | Grounds each accuracy claim against live search | candidate claims → verdict + source |
 | 3 | Claude | Writes itemized feedback | review notes + grounding → feedback.json |
 | 4 | Codex | Reconciles feedback point by point (4a agree/revise, 4b disagree + reason) | feedback.json → draft v2 + decision.json |
-| — | auto | If every point was 4a, finalize — no second review pass | — |
+| — | auto | If every point was 4a, skip straight to Step 6 — no second review pass | — |
 | 5 | Claude | Arbitrates any 4b disagreement (5a concur, 5b still disagrees) | decision.json → concur or flag |
 | — | owner | Breaks the tie on a 5b flag; that decision resumes the loop | — |
+| 6 | Owner | Final read of the reconciled script (draft v2, or later if arbitration looped) — the last human checkpoint before locking | draft v2 → locked script in `Shared/`, or notes sent back into the loop |
 
 Full prompt text for each step lives in `pipeline/prompts/`. JSON contracts: `pipeline/schemas/feedback.schema.json`, `pipeline/schemas/decision.schema.json`.
+
+**Why Step 6 exists even on a clean all-agree run:** Steps 1-5 can auto-finalize on two AI models agreeing with each other, but agreement isn't the same bar as "an actual person would find this good." `PROJECT-CONTEXT.md` bets the channel's differentiation on real narrative judgment, not just factual accuracy — so the script gets one human read before it locks, regardless of how clean the automated loop was. At roughly 2,200 words for a 13-scene script, that's a 10-20 minute read, not a bottleneck. Claude does a mechanical proofread pass (typos, formatting, dropped words) immediately before handing off, so the owner's read is spent on judgment and tone, not copy-editing.
 
 ## 3. Why grounding is Step 2.5, not part of Step 5
 
@@ -95,12 +98,24 @@ Live notes from the first hand-run, topic: *"The Life of a Packet — What Actua
 
 **Step 1 (Codex draft) — done.** `codex exec --skip-git-repo-check -s workspace-write "<prompt>"` produced `Projects/Life-of-a-Packet/Codex/draft-v01.md` (13 scenes, ~2,500 words) on the second attempt. First attempt failed silently on the write — Codex's sandbox defaults to read-only, so `-s workspace-write` is required, not optional. Codex also self-corrected a claim from the owner's own notes ("every agent is its own IP endpoint" isn't quite right — agents typically share a host IP; NAT/PAT tracks per-flow state, not per-agent identity) rather than repeating it uncritically, which is the behavior the spec's uncertainty rule is meant to produce.
 
-**Step 2 (Claude review) — blocked.** Two issues surfaced, in order:
+**Step 2 (Claude review) — done, after an auth fix.** Two issues surfaced, in order:
 
 1. `claude -p --allowedTools "Bash,Read,Edit" "<prompt>"` fails: `--allowedTools` greedily consumes the next argv as more comma-separated tool rules instead of treating it as the prompt, so the prompt text gets shredded into garbage permission rules and `claude -p` then errors with no prompt provided. **Fix:** pipe the prompt via stdin instead of passing it positionally — `cat prompt.md | claude -p --allowedTools "Bash,Read,Edit"`.
-2. With that fixed, `claude -p` returns `Not logged in · Please run /login` — reproduced both from inside a Claude Code session's Bash tool and from a plain Terminal window (`echo hi | claude -p`), so this isn't a nested-session artifact. This section's earlier claim that `claude -p` was "confirmed working headless on this Mac" was stale/wrong. **Fix, not yet applied:** run `claude setup-token` (headless-appropriate, unlike interactive browser `/login`) and retry.
+2. With that fixed, `claude -p` returned `Not logged in · Please run /login` — reproduced both from inside a Claude Code session's Bash tool and from a plain Terminal window (`echo hi | claude -p`), so this wasn't a nested-session artifact. This section's earlier claim that `claude -p` was "confirmed working headless on this Mac" was stale/wrong. **Fix:** `claude setup-token` (headless-appropriate, unlike interactive browser `/login`) generates a token, but does not itself write it anywhere — it must be manually exported (`export CLAUDE_CODE_OAUTH_TOKEN="..."` in `~/.bash_profile`) for `claude -p` to pick it up. Once that was done, `claude -p` authenticated correctly.
 
-Steps 2.5 through 5 haven't been attempted yet — blocked behind the Step 2 auth fix.
+With auth fixed, Step 2 produced real review notes: 9 accuracy candidates for grounding, plus language notes that caught a genuine house-style conflict (see below) and a continuity error (Scene 1 sets up "an AI engineer," Scene 13's original closer called back to "the architect" instead).
+
+**Step 2.5 (Antigravity grounding) — done, sampled not exhaustive.** `agy -p "<prompt>"` authenticated and worked on the first try, no flags needed beyond `-p`. Rather than ground all 9 accuracy candidates (real cost at scale), 3 were run as a proof sample — all came back `supported` with real, checkable sources (RFC 4271 for BGP policy routing; Palo Alto/OWASP docs for certificate pinning vs. TLS inspection; RFC 3022/2663 for NAT/PAT per-flow state). The cert-pinning grounding also surfaced a useful precision nuance (pinning "prevents" inspection by aborting the handshake, not by silently routing around it) without actually contradicting the claim — a good example of grounding doing more than a binary supported/contradicted check.
+
+**Step 3 (Claude writes feedback.json) — done, but exposed a scaffolding gap.** There is no `pipeline/prompts/03-claude-feedback.md` file — Phase 0's file tree (section 6) never included one. Worked around it by writing the Step 3 prompt inline for this run; a real `03-claude-feedback.md` should be added before Phase 2. Output validated cleanly against `feedback.schema.json` (15 points, correct enums, correct `grounded` sub-objects) on the first attempt — no schema-shape surprises.
+
+**Step 4 (Codex reconciles) — done, auto-finalized.** All 15 feedback points resolved `agree`; `decision.json` validated cleanly and covered every `feedback_id` from `feedback.json` with none dropped. Codex correctly applied both the house-style fix (removed the first-person "I spoke at Cisco Live 2026" framing per an explicit owner decision — see below) and the continuity fix. Because every point was `agree`, Step 5 (arbitration) was correctly skipped per the pipeline's own auto-finalize rule.
+
+**Owner decision folded into Step 3, not sent to grounding:** the draft's first-person "I have spent years in networking" / "my Cisco Live 2026 session" framing conflicted with `PROJECT-CONTEXT.md`'s "do not use the owner's voice" rule. The owner confirmed the Cisco Live material is real but was given to the pipeline only to establish the topic is well-grounded, not as an instruction to write the narrator as the owner's literal identity. This was the right kind of point to resolve as an owner policy decision rather than an Antigravity grounding candidate — grounding answers "is this true," not "should we say this."
+
+**New Step 6 added to the design (section 2): owner final read before locking to `Shared/`.** The steps table originally had Steps 1-5 auto-finalizing straight to a locked script with no human read on the clean-agreement path — only a 5b flag pulled the owner in. Added because two AI models agreeing isn't the same bar as "a person would find this good," and `PROJECT-CONTEXT.md` bets the channel's differentiation on real narrative judgment. At ~2,200 words for 13 scenes, this is a 10-20 minute read, not a bottleneck.
+
+**Pronunciation-note completeness — real gap, now fixed both in this draft and in the process.** During the Step 6 read, `draft-v02.md` was scanned for every abbreviation used and cross-checked against existing `Pronunciation notes` blocks. `RAG` had zero guidance despite being exactly the ambiguous case this matters for — it's conventionally spoken as a word ("rag") in AI/ML, not spelled out, and a TTS engine has no way to know that without an explicit note. `TCP`, `UDP`, `IP`, `ISP`, and `URL` were also missing notes despite sibling abbreviations in the same scenes (`TLS`, `QUIC`, `DHCP`/`NAT`/`PAT`, `DNS`/`BGP`) already having them. Fixed directly in `draft-v02.md`, and added a permanent "pronunciation completeness" check to `pipeline/prompts/02-claude-review.md`'s Step 2 instructions so future episodes catch this automatically instead of relying on a manual scan at Step 6.
 
 ---
 

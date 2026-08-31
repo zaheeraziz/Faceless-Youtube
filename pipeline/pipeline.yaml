@@ -13,9 +13,18 @@ models:
 
 cli:
   codex:
-    command: "codex exec --skip-git-repo-check"
+    command: "codex exec --skip-git-repo-check -s workspace-write"
+    # -s workspace-write is required, not optional — codex exec defaults to a
+    # read-only sandbox and silently fails to save any output file without it.
   claude:
     command: "claude -p --allowedTools \"Bash,Read,Edit\""
+    # The prompt MUST be piped via stdin, never passed positionally after
+    # --allowedTools — that flag greedily consumes the next argv as more
+    # comma-separated tool rules and shreds the prompt. Invoke as:
+    #   cat prompt.md | claude -p --allowedTools "Bash,Read,Edit"
+    # Also requires CLAUDE_CODE_OAUTH_TOKEN to be set in the environment
+    # (from `claude setup-token`) — a bare interactive /login does not
+    # authenticate claude -p for headless use.
   antigravity:
     command: "agy -p"
   vertex_gemini_fallback:
@@ -30,9 +39,25 @@ timeouts_seconds:
   arbitrate: 120
 
 notify:
-  on_flag:
-    push: true
-    in_session: true
+  # Two events trigger a notification: a Step 5b flag (Codex/Claude disagree
+  # and stayed disagreeing) and a script reaching Step 6 (ready for the
+  # owner's final read before locking to Shared/).
+  events: [on_flag, on_ready_for_review]
+  supervised:
+    # When the pipeline is being run inside a live Claude Code session
+    # (e.g. a hand-run), Claude fires the PushNotification tool directly —
+    # desktop notification, plus phone push if Remote Control is connected.
+    method: push_notification_tool
+  unattended:
+    # Phase 2 (run-pipeline.sh running standalone, no live Claude session
+    # to call a tool from): NOT YET BUILT. Planned approach is a native
+    # macOS notification fired by the orchestrator itself, independent of
+    # any Claude session being alive — e.g. `osascript -e 'display
+    # notification "..." with title "Coverage Desk"'`. Phone delivery while
+    # away from the Mac would need a separate lightweight channel on top of
+    # that (not decided) — a Phase 2 design task, not solved yet.
+    method: macos_notification   # planned, not implemented
+    status: not_built
 
 paths:
   episode_root: "Projects/{slug}"
