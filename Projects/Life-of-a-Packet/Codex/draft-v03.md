@@ -1,4 +1,4 @@
-# The Life of a Packet — Draft v02
+# The Life of a Packet — Draft v03
 
 **Viewer promise:** By the end of this video, you will be able to trace an AI agent request from your code to the model and back—and identify where the delay actually came from instead of blaming “the network.”
 
@@ -111,6 +111,8 @@ Our request leaves the device and crosses the local network.
 
 The device probably received a private IP address from DHCP. It sends the frame toward its default gateway—usually a router or firewall—which may translate that private address and source port into a public address and a different port. That is NAT, and commonly PAT.
 
+That same DHCP handoff usually also told the device which DNS resolver to ask. Before the application ever sends its actual request, the device already asked that resolver—inside the enterprise or home network, or forwarded on to the ISP—to turn the service's name into a destination address. This resolution happens close to home. It is not a deep-network event.
+
 The gateway records state so return traffic can be matched to the right internal connection. Every software agent is not necessarily its own IP endpoint: ten agents on one laptop may share one IP. But every distinct network flow can consume connection-tracking, firewall, and NAT state. Agents on separate hosts, containers, or network namespaces may also have distinct addresses.
 
 At high concurrency, flow tables, port availability, firewall session limits, and idle timers become resources worth measuring. Pressure here may surface as intermittent timeouts rather than an explicit state-table warning.
@@ -118,6 +120,8 @@ At high concurrency, flow tables, port availability, firewall session limits, an
 **On-screen text**
 
 - DHCP: assigns local configuration
+- DHCP also points to a DNS resolver
+- DNS resolved locally—not deep in the network
 - Private IP + port
 - NAT/PAT translation
 - State tracked per flow
@@ -126,6 +130,7 @@ At high concurrency, flow tables, port availability, firewall session limits, an
 **Pronunciation notes**
 
 - DHCP: say each letter
+- DNS: say each letter
 - NAT: “nat” (rhymes with “cat”) — spoken as a word, not spelled out
 - PAT: “pat” — spoken as a word, not spelled out
 - IP: say each letter
@@ -154,9 +159,7 @@ Where could delay accumulate now? On the access link, deeper in the provider, or
 
 **Narration**
 
-The request also needs a destination address. A local cache may already have one; otherwise, DNS resolution continues until the application receives an answer.
-
-Some services use DNS responses as one input to steer clients toward a particular edge or region. The exact behavior is service-specific.
+By now, the destination address is already known—resolved back at the local network, not out here. But that resolution can do more than return an address: some services use DNS responses as one input to steer clients toward a particular edge or region. The exact behavior is service-specific.
 
 Between organizations, BGP shapes reachability across a federation of access providers, transit networks, content networks, and cloud operators. It does not simply choose the geographically shortest line on a map. Our request might cross private peering, an internet exchange, or paid transit, and its return route may differ.
 
@@ -164,14 +167,15 @@ Physical distance alone therefore cannot reveal the route our engineer’s reque
 
 **On-screen text**
 
-- DNS: name → destination address
+- Destination address: already resolved, back near the device
+- DNS may also steer toward an edge or region
 - BGP: reachability between autonomous systems
 - Peering • Transit • Policy
 - Outbound path ≠ return path
 
-**Pronunciation notes**
+**Pronunciation note**
 
-- DNS and BGP: say each letter
+- BGP: say each letter
 
 ## Scene 8
 
@@ -291,7 +295,7 @@ Some delays remain hard to see from the client: initialization before processing
 
 Now we can answer the AI engineer’s question.
 
-When an agent does a task, its request leaves the application, crosses the operating-system stack and local interface, competes for upstream capacity, passes a router and stateful translation, enters an ISP, follows DNS and interdomain routing decisions, crosses organizational handoffs, passes edge and security checks, reaches gateways and cloud routing, traverses internal services, waits for compute—and then makes the trip back.
+When an agent does a task, its request leaves the application, crosses the operating-system stack and local interface, resolves a destination address close to home, competes for upstream capacity, passes a router and stateful translation, enters an ISP, follows interdomain routing decisions, crosses organizational handoffs, passes edge and security checks, reaches gateways and cloud routing, traverses internal services, waits for compute—and then makes the trip back.
 
 That is dozens of potential hops, several policy checkpoints, and multiple organizations, all compressed into one spinner in the user interface.
 
