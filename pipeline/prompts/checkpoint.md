@@ -13,7 +13,7 @@ Per `COVERAGE-DESK-SPEC.md` section 5, Claude is the sole GitHub operator — Co
 You'll be told which step just ran and for which episode slug. Do the following:
 
 1. Run `git status` and `git diff` (or `git diff --cached` if already staged) scoped to the episode's folder (`Projects/<slug>/`) to see exactly what changed.
-2. Stage only the files that step produced — don't sweep in unrelated changes elsewhere in the working tree.
+2. Stage only the actual deliverable(s) that step produced (e.g. `draft-v01.md`, or `draft-v02.md` + `decision.json`) — never the pipeline's own scratch files. Anything matching `Projects/<slug>/{Codex,Claude}/.step*.txt` or `.checkpoint*.txt` is a rendered prompt or raw notes file `run-pipeline.sh` writes for its own use, not a deliverable — it's already `.gitignore`d and must stay that way. Even though you can see it sitting in the directory, do not add it by explicit path.
 3. Write a commit message that's specific to what changed (which step, which files, and anything notable about the content — e.g. if Codex flagged something as `[UNVERIFIED: ...]`, or if this is a reconciliation with any disagreements, mention it). Follow the repo's existing commit message conventions (see recent `git log`).
 4. Commit, then push to `origin {{push_branch}}`.
 5. Report back concisely: what was committed, the commit hash, and confirmation the push succeeded.
