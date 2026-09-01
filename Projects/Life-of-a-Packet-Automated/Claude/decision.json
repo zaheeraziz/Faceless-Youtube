@@ -1,0 +1,29 @@
+{
+  "episode_slug": "Life-of-a-Packet-Automated",
+  "draft_version": "v02",
+  "decisions": [
+    { "feedback_id": "fb-01", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-02", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-03", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-04", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-05", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-06", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-07", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-08", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-09", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-10", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-11", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-12", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-13", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-14", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-15", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-16", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-17", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-18", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-19", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-20", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-21", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-22", "codex_response": "agree", "status": "resolved_agree" },
+    { "feedback_id": "fb-23", "codex_response": "agree", "status": "resolved_agree" }
+  ]
+}
