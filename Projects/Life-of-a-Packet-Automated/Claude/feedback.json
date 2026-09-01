@@ -1,0 +1,209 @@
+{
+  "episode_slug": "Life-of-a-Packet-Automated",
+  "draft_version": "v01",
+  "generated_by": "claude",
+  "points": [
+    {
+      "id": "fb-01",
+      "category": "accuracy",
+      "location": "Scene 4",
+      "issue": "Load-bearing claim for the scene: \"A large context window, conversation history, images, tool output, or a RAG pipeline that stuffs retrieved documents into a prompt can push more bytes up than the final answer sends down.\" Grounded — supported. Modern LLM API request payloads (long context, base64 images, tool-call outputs, retrieved documents) can run into the tens of megabytes, while typical text completions are far smaller, so the upload-heavier-than-download framing holds for the RAG/long-context case the script describes.",
+      "suggested_fix": "No factual correction needed; the claim is grounded. Optional: keep as-is.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "Anthropic Claude API Reference, \"Messages API\" (request payload limits for conversation history, base64 images, tool outputs, and document blocks vs. typical output token response sizes)"
+      }
+    },
+    {
+      "id": "fb-02",
+      "category": "accuracy",
+      "location": "Scene 4",
+      "issue": "Claim: \"Many home and office connections provide less upload capacity than download capacity\" (asymmetric broadband). Grounded — supported. Cable, DSL, and many consumer fiber tiers are commonly provisioned with materially lower upload than download bandwidth.",
+      "suggested_fix": "No factual correction needed; the claim is grounded. Optional: keep as-is.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "FCC Measuring Broadband America Reports"
+      }
+    },
+    {
+      "id": "fb-03",
+      "category": "accuracy",
+      "location": "Scene 3",
+      "issue": "Claim: \"Depending on the protocol, the data may travel over TCP protected by TLS, or over QUIC, which runs over UDP.\" Grounded — supported. This is the standard protocol layering described in the relevant IETF specifications.",
+      "suggested_fix": "No factual correction needed; the claim is grounded. Optional: keep as-is.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "IETF RFC 9000 (QUIC: A UDP-Based Multiplexed and Secure Transport); IETF RFC 8446 (TLS 1.3)"
+      }
+    },
+    {
+      "id": "fb-04",
+      "category": "accuracy",
+      "location": "Scene 5",
+      "issue": "Claim: at high concurrency, \"session-table capacity, available ports, firewall limits, and idle timers become real resources. When they come under pressure, the symptom may be intermittent timeouts—not a neat alert.\" Grounded — supported. Vendor troubleshooting documentation for NAT/PAT port exhaustion describes exactly this symptom shape: silent, intermittent connection failures rather than a labeled error.",
+      "suggested_fix": "No factual correction needed; the claim is grounded. Optional: keep as-is.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "Microsoft Learn, \"Troubleshoot intermittent outbound connection errors in Azure App Service\"; AWS Documentation, \"Monitor NAT gateways with Amazon CloudWatch\" (ErrorPortAllocation metric)"
+      }
+    },
+    {
+      "id": "fb-05",
+      "category": "accuracy",
+      "location": "Scene 6",
+      "issue": "Claim: \"Some services also use DNS answers as one input for steering clients toward an edge or region.\" Grounded — supported. Latency-based and geolocation DNS routing, plus GSLB, are documented, real mechanisms used by major cloud/CDN providers for exactly this purpose.",
+      "suggested_fix": "No factual correction needed; the claim is grounded. Optional: keep as-is.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "AWS Route 53 Developer Guide (\"Choosing a routing policy\" — latency-based and geolocation routing); Cloudflare GSLB documentation"
+      }
+    },
+    {
+      "id": "fb-06",
+      "category": "accuracy",
+      "location": "Scene 7",
+      "issue": "Claim: ISP routers \"forward it using addresses, routing information, labels, traffic classes, and policy.\" Step 2 flagged \"labels\" as a possible overreach for a generic consumer ISP path (it implies MPLS). Grounded — supported that MPLS label-switching is a real, standard mechanism, but the grounding pass could not confirm it applies to every hop of a generic residential path specifically — MPLS is most reliably a backbone/provider-core technology, not necessarily present on the access/last-mile hop.",
+      "suggested_fix": "Keep \"labels\" — it is accurate for the ISP backbone/core hops the scene is describing — but consider a light precision note (on-screen or narration) that label-switching applies deeper in the provider network rather than implying every hop uses it.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "IETF RFC 3031 (Multiprotocol Label Switching Architecture); IETF RFC 4364 (BGP/MPLS IP VPNs)",
+        "note": "Confirms MPLS label-switching is real and standard, but grounding did not establish it as universal on the access/last-mile hop specifically — it is most reliably a backbone/provider-core mechanism. Scene wording is broad enough (\"the provider\") that this is a minor scope nuance, not a correction."
+      }
+    },
+    {
+      "id": "fb-07",
+      "category": "accuracy",
+      "location": "Scene 8",
+      "issue": "Claim: \"BGP distributes reachability information between them and lets each organization apply routing policy. It does not simply draw the geographically shortest line between you and the cloud.\" Grounded — supported. BGP's decision process is policy-driven (AS path length, local preference, MEDs, etc.), not a shortest-physical-path algorithm.",
+      "suggested_fix": "No factual correction needed; the claim is grounded. Optional: keep as-is.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "IETF RFC 4271 (A Border Gateway Protocol 4 (BGP-4), Section 9.1, Decision Process)"
+      }
+    },
+    {
+      "id": "fb-08",
+      "category": "accuracy",
+      "location": "Scene 9",
+      "issue": "Claim: enterprise TLS inspection \"terminates the encrypted connection, examines the decrypted content, and establishes a new encrypted connection onward,\" and \"certificate pinning, privacy requirements, application design, or end-to-end encryption may prevent inspection or cause the connection to fail instead.\" Grounded — supported; this is the standard forward-proxy TLS-inspection mechanism, and pinning causing a hard connection failure (rather than silent bypass) matches documented behavior. Step 2 noted the same claim shape was previously grounded as supported for the prior (non-automated) project — this draft's phrasing is consistent with that finding.",
+      "suggested_fix": "No factual correction needed; the claim is grounded. Optional: keep as-is.",
+      "grounded": {
+        "checked_by": "antigravity",
+        "verdict": "supported",
+        "source": "Palo Alto Networks PAN-OS Administrator's Guide (SSL Forward Proxy Decryption; Certificate Pinning Issues in SSL Decryption)"
+      }
+    },
+    {
+      "id": "fb-09",
+      "category": "accuracy",
+      "location": "Scene 2",
+      "issue": "Claims not yet grounded: \"one request is divided into multiple packets\" and \"a modern application may use several connections.\" This claim has not been grounded yet — left unchecked in this pass because it is basic, non-load-bearing TCP/IP packetization background rather than a claim the video's argument depends on, and the grounding budget was prioritized toward scene-specific, load-bearing, or previously-flagged claims (Scenes 3-9).",
+      "suggested_fix": "Low priority for Step 2.5 follow-up; this is standard networking background. If time allows before publish, a single grounding pass against a general TCP/IP reference (e.g. RFC 791/RFC 793 packetization basics) would close this out, but it is not blocking."
+    },
+    {
+      "id": "fb-10",
+      "category": "accuracy",
+      "location": "Scene 3",
+      "issue": "Claims not yet grounded: OS-level route selection and \"transport state\" creation on connection setup, and segmentation + attaching transport/IP headers before handoff to the local interface. This claim has not been grounded yet — the protocol-pairing portion of this scene (fb-03) was grounded, but the OS-mechanics description was not, due to time-boxing.",
+      "suggested_fix": "If time allows before publish, ground the OS network-stack description (route lookup, socket/transport state, segmentation, header attachment) against a general OS networking reference (e.g. Linux kernel networking documentation or a standard TCP/IP illustrated text). Not blocking — this is standard OS networking behavior."
+    },
+    {
+      "id": "fb-11",
+      "category": "accuracy",
+      "location": "Scene 5",
+      "issue": "Claims not yet grounded: DHCP-assigned private addressing, and \"every software agent is not automatically its own IP endpoint\" (multiple agents on one host sharing an address). This claim has not been grounded yet — the NAT/PAT exhaustion portion of this scene (fb-04) was grounded, but the DHCP/shared-address claim was not, due to time-boxing.",
+      "suggested_fix": "If time allows before publish, ground against DHCP (RFC 2131) and private addressing (RFC 1918) references. Not blocking — this is standard, well-established networking behavior with low risk of being wrong."
+    },
+    {
+      "id": "fb-12",
+      "category": "accuracy",
+      "location": "Scene 6",
+      "issue": "Claim not yet grounded: \"The answer may already be cached in the application, operating system, or resolver.\" This claim has not been grounded yet — the DNS-steering portion of this scene (fb-05) was grounded, but the multi-layer caching claim was not, due to time-boxing.",
+      "suggested_fix": "If time allows before publish, ground the multi-layer DNS caching claim (browser/app cache, OS stub resolver cache, recursive resolver cache) against a general DNS reference (e.g. RFC 1035 plus OS resolver documentation). Not blocking — this is standard, low-risk DNS behavior."
+    },
+    {
+      "id": "fb-13",
+      "category": "accuracy",
+      "location": "Scene 7",
+      "issue": "Claim not yet grounded: \"Traceroute can offer clues about some layer-three hops, but it is not a complete latency ledger. Routers may deprioritize or ignore its probes, and a missing response does not prove that forwarding failed.\" This claim has not been grounded yet — the \"labels\"/MPLS portion of this scene (fb-06) was grounded, but the traceroute/ICMP behavior claim was not, due to time-boxing.",
+      "suggested_fix": "If time allows before publish, ground against ICMP/traceroute behavior references (e.g. RFC 792, or standard documentation on ICMP rate-limiting and routers deprioritizing time-exceeded/echo responses). Not blocking — this is a well-documented traceroute limitation."
+    },
+    {
+      "id": "fb-14",
+      "category": "accuracy",
+      "location": "Scene 8",
+      "issue": "Claims not yet grounded: \"The request may cross private peering, an internet exchange, or paid transit,\" and \"the return traffic can take a different path from the request\" (asymmetric routing). This claim has not been grounded yet — the BGP geographic-shortest-path portion of this scene (fb-07) was grounded, but the peering/transit and asymmetric-routing claims were not, due to time-boxing.",
+      "suggested_fix": "If time allows before publish, ground peering/IX/transit as route determinants and asymmetric (hot-potato) routing against standard interdomain routing references. Not blocking — these are well-established internet architecture facts."
+    },
+    {
+      "id": "fb-15",
+      "category": "accuracy",
+      "location": "Scene 9",
+      "issue": "Claim not yet grounded: the ordering and grouping of \"edge service, firewall policy, and DDoS protection before it reaches the application.\" This claim has not been grounded yet — the TLS-inspection mechanics portion of this scene (fb-08) was grounded, but the edge/firewall/DDoS ordering claim was not, due to time-boxing.",
+      "suggested_fix": "If time allows before publish, ground the typical edge-security ordering against a major cloud/CDN provider's reference architecture (e.g. AWS, Cloudflare, or Azure edge security documentation). Not blocking — the script phrases this loosely (\"may meet\") rather than as a strict universal ordering."
+    },
+    {
+      "id": "fb-16",
+      "category": "accuracy",
+      "location": "Scene 10",
+      "issue": "Claims not yet grounded: load balancer and API gateway responsibilities (authentication, quotas, oversized-request rejection, policy, telemetry), and the cross-region failover scenario (nearby region unhealthy leads to failover to a healthy region while a dependency stays in the original region, adding a long round trip). This claim has not been grounded yet — not sampled in this time-boxed pass.",
+      "suggested_fix": "If time allows before publish, ground API gateway responsibilities against a major provider's API gateway documentation (e.g. AWS API Gateway, Kong, or Azure API Management), and the cross-region failover scenario against a multi-region architecture reference. The script already hedges this correctly (\"That is a possible architecture, not a universal failover pattern\"), which lowers the risk of an ungrounded overreach."
+    },
+    {
+      "id": "fb-17",
+      "category": "accuracy",
+      "location": "Scene 11",
+      "issue": "Claims not yet grounded: VPC routing + security groups; service mesh proxies handling mutual TLS and telemetry; retry logic living at this layer; and the orchestration/retrieval/policy/memory/tool-selection/model-routing list presented as \"what makes an agent an agent.\" This claim has not been grounded yet — not sampled in this time-boxed pass. The agent-definition list in particular is more a conceptual/definitional claim than a single verifiable fact, so full grounding may not resolve it cleanly even if attempted.",
+      "suggested_fix": "If time allows before publish: ground VPC/security-group and service-mesh mechanics against standard cloud networking and service-mesh documentation (e.g. Istio or Linkerd architecture docs). For the agent-definition list, treat as an editorial/house-style call for Step 4 rather than a pure grounding target — confirm it matches how PROJECT-CONTEXT.md or prior episodes define \"agent\" components."
+    },
+    {
+      "id": "fb-18",
+      "category": "accuracy",
+      "location": "Scene 12",
+      "issue": "Claims not yet grounded: queueing/scheduling before inference, the cold-start vs. warm-capacity distinction, and the specific milestone list (DNS time, connection time, TLS negotiation, upload-finish time, time to first byte, total time) presented as the right breakdown to measure. This claim has not been grounded yet — not sampled in this time-boxed pass.",
+      "suggested_fix": "If time allows before publish, ground the milestone list against a standard web/API performance timing reference (e.g. the W3C Resource Timing / Navigation Timing specs, which define equivalent phases: DNS, connect, TLS, request, TTFB). This is a strong candidate for confirming the milestone list matches an established standard breakdown rather than an invented one."
+    },
+    {
+      "id": "fb-19",
+      "category": "accuracy",
+      "location": "Scene 13",
+      "issue": "Claims not yet grounded: streaming improves perceived responsiveness without eliminating queueing/retransmission/loss/congestion, and the list of latency sources \"hidden from client\" (cold start, internal queue, retry, regional failover, cross-region dependency). This claim has not been grounded yet — not sampled in this time-boxed pass; lower priority because it largely restates claims already grounded or covered elsewhere in the script (fb-01, fb-04, fb-16, fb-18) rather than introducing a new load-bearing assertion.",
+      "suggested_fix": "Low priority for Step 2.5 follow-up given the overlap with already-grounded claims elsewhere in the script. If time allows, a single grounding pass on HTTP streaming/chunked-transfer behavior (e.g. against the relevant HTTP/1.1 or HTTP/2 streaming specification) would close this out."
+    },
+    {
+      "id": "fb-20",
+      "category": "language",
+      "location": "Scenes 3, 6, 7, 8, 9, 10, 13",
+      "issue": "Recurring craft issue carried over from the prior (non-automated) Life-of-a-Packet project's Step 2 review (fb-12 there): a mechanical \"introduce the component, then a short qualifying/hedge sentence\" rhythm repeats in 8 of 14 scenes (e.g. Scene 3: \"...all of it gets labeled 'network.'\"; Scene 6: \"DNS does not carry the model request through the internet. It tells the client where to send it.\"; Scene 8: \"It does not simply draw the geographically shortest line...\"; Scene 10 has two hedges in one scene). This is a house-style/craft call, not a fact to verify, so it is not sent through grounding.",
+      "suggested_fix": "Vary the rhetorical device across a few of these scenes (a direct question, a contrast, a short anecdote) instead of the same explain-then-hedge shape every time, per the earlier project's own note and the \"no generic template videos\" guardrail in PROJECT-CONTEXT.md. Suggest starting with Scene 8 or Scene 13, which sit back-to-back with other hedge-pattern scenes and would benefit most from a different shape."
+    },
+    {
+      "id": "fb-21",
+      "category": "language",
+      "location": "Scenes 6-9",
+      "issue": "Pacing risk: Scenes 6 through 9 (DNS, ISP, BGP, edge/TLS) run as consecutive technical explainer beats with no callback to the engineer/investigation frame established in Scenes 1-4 and picked back up in Scene 10 (\"Suppose the nearby cloud region becomes unhealthy...\"). Lighter than the checklist pacing issue found in the prior project, but this specific four-scene stretch has zero narrative anchor beats. This is a house-style/pacing call, not a fact to verify.",
+      "suggested_fix": "Add one short anchor beat somewhere in Scenes 6-9 that returns to the engineer's original complaint or the investigation frame (mirroring Scene 4's \"Before blaming the model, ask a better question...\" device), so the technical density doesn't run four scenes without a narrative touchpoint."
+    },
+    {
+      "id": "fb-22",
+      "category": "language",
+      "location": "Scene 5, Scene 10, Scene 11",
+      "issue": "Pronunciation completeness gaps: each scene's Pronunciation notes should be self-contained for a narrator/editor working scene-by-scene, but three acronyms are used in a scene without a local note, relying on an earlier or later scene's note instead. Scene 10 uses \"API\" twice (narration \"API gateway\"; on-screen text \"API gateway,\" \"Same API address\") but has no Pronunciation notes section at all — the only API note in the script is in Scene 11. Scene 5 uses \"IP\" twice (narration \"private IP address\"; on-screen text \"Private IP + source port\") but Scene 5's notes cover only DHCP/NAT/PAT, not IP (covered only in Scene 3). Scene 11 uses \"TLS\" in narration (\"mutual TLS\") but Scene 11's only note is VPC/API — TLS is covered only in Scenes 3 and 9.",
+      "suggested_fix": "Add local Pronunciation notes: Scene 10 needs an \"API: say each letter\" note added (currently has no Pronunciation notes section at all — the highest-priority gap of the three). Scene 5 needs \"IP: say each letter\" added alongside its existing DHCP/NAT/PAT notes. Scene 11 needs \"TLS: say each letter\" added alongside its existing VPC/API note."
+    },
+    {
+      "id": "fb-23",
+      "category": "language",
+      "location": "Scene 3 (CPU, OS); Scenes 1, 2, 4, 7 (AI)",
+      "issue": "Pronunciation notes possibly missing, flagged for a decision rather than asserted: CPU appears in Scene 3 narration (\"competing for CPU\") with no pronunciation note. OS appears in Scene 3 on-screen text (\"OS network stack\") with no note — likely letter-by-letter (\"O-S\") but not certain it needs one at all. AI appears in narration across Scenes 1, 2, 4, and 7 (\"AI engineer,\" \"AI request,\" \"AI developers,\" \"AI agent\") with no pronunciation note anywhere in the script, likely because it is unambiguous and universally known. This resolves an open house-style/editorial question (does a near-universally-known acronym need a pronunciation note at all), not a fact to verify, so it is not sent through grounding.",
+      "suggested_fix": "Step 4 should decide the house rule: if the standard is \"every acronym gets a note regardless of familiarity,\" add CPU and OS notes to Scene 3 and an AI note to Scenes 1, 2, 4, and 7. If the standard allows an exception for near-universally-known acronyms, AI can likely be skipped, but CPU and OS are worth adding since they are less universally unambiguous than AI."
+    }
+  ]
+}
