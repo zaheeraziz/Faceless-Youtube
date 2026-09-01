@@ -9,7 +9,7 @@ Tool consolidation is a goal, not a rule. The stack below is the smallest plausi
 1. **Claude / Claude Code** — control center for research, scripts, storyboards, editing, thumbnails, QA, and project management.
 2. **ElevenLabs** — consistent AI narration plus speech timing for captions and scene synchronization.
 3. **Higgsfield** — generated images and video shots that cannot be created efficiently with geometric animation.
-4. **Gemini or OpenAI** — independent audit of Claude's work; it must not share authorship of the first draft.
+4. **Gemini or OpenAI** — independent audit of the script pipeline's output; it must not share authorship of the first draft.
 
 These three are hypotheses, not commitments. Higgsfield in particular must earn its place through output quality and cost. A licensed music library, archival-media provider, specialist image generator, or different editing service may be required after testing.
 
@@ -45,7 +45,7 @@ These three are hypotheses, not commitments. Higgsfield in particular must earn 
 
 ### 3. Write the story package
 
-**Claude produces:**
+**Codex drafts, Claude reviews** — see `COVERAGE-DESK-SPEC.md` for the full script-stage pipeline (draft → review → ground → feedback → reconcile → arbitrate → owner finalizes). The output:
 
 - One-sentence viewer promise.
 - 10–20 second opening hook.
@@ -92,7 +92,7 @@ These three are hypotheses, not commitments. Higgsfield in particular must earn 
 
 ### 7. Independent second-model audit
 
-After Claude completes the draft, send the audit package to **Gemini or OpenAI**. Use a different provider from the authoring model to reduce correlated errors.
+After the script pipeline finalizes (Codex drafts, Claude reviews and reconciles — see `COVERAGE-DESK-SPEC.md`), send the audit package to **Gemini or OpenAI**. Use a different provider from either authoring model to reduce correlated errors.
 
 The package contains:
 

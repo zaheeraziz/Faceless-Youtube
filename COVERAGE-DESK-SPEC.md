@@ -2,7 +2,7 @@
 
 Design spec for the first automated stage of video production: script writing. Draft → review → ground → feedback → reconcile → arbitrate → finalize or flag. Git-backed twin of the working Artifact; update both together.
 
-Status: **Phase 1 hand-run complete, end to end.** Steps 1-4 auto-finalized; Step 6 owner review caught two real technical flaws (both fixed in `draft-v03.md`); the script is locked at `Projects/Life-of-a-Packet/Shared/LIFE-OF-A-PACKET-MASTER-SCRIPT.md`. Phase 2 (building `pipeline/run-pipeline.sh` for real) is next. See "Owner decision" below for why this exists despite the business-before-tools gate in `PROJECT-CONTEXT.md` still being open. See section 9 for the full findings log.
+Status: **Phase 2 built, awaiting first real test run.** `pipeline/run-pipeline.sh` now sequences Steps 1-5 for real, checkpointing to git and notifying the owner via macOS notification when an episode is ready for Step 6. See "Owner decision" below for why this exists despite the business-before-tools gate in `PROJECT-CONTEXT.md` still being open. See section 9 for the full findings log, including Phase 1's hand-run (still there, unaltered — Phase 2 automates what it proved) and section 10 for what changed building Phase 2 itself.
 
 ## 1. Owner decision — proceeding ahead of the business gate
 
@@ -81,7 +81,7 @@ Auth lives outside the repo entirely (`~/.codex`, `~/.claude`, `~/.gemini`); `.g
 
 ## 7. Known doc conflict — not yet resolved
 
-`END-TO-END-WORKFLOW.md` has Claude drafting the script end-to-end with Gemini/OpenAI as the independent auditor — Codex isn't in that document at all. This spec's Codex-drafts/Claude-reviews split is confirmed as the actual design (it also matches how the `AI-Agent-Map` pilot was run in practice), but `END-TO-END-WORKFLOW.md` itself hasn't been edited yet to remove the contradiction. Do that before Phase 2.
+**Resolved.** `END-TO-END-WORKFLOW.md` had Claude drafting the script end-to-end with Gemini/OpenAI as the independent auditor — Codex wasn't in that document at all. Fixed to reflect the actual confirmed design (Codex drafts, Claude reviews/reconciles, then the Gemini/OpenAI audit runs on the pipeline's finalized output) before Phase 2 build work started.
 
 ## 8. Project plan
 
@@ -89,7 +89,7 @@ Auth lives outside the repo entirely (`~/.codex`, `~/.claude`, `~/.gemini`); `.g
 |---|---|---|
 | 0 | Claude | Scaffold `pipeline/` and this file into the repo. One commit, nothing runs. |
 | 1 | Owner | Hand-run the flow once on a real topic, calling each CLI directly, to prove the prompt wording and JSON shape before anything runs unattended. |
-| 2 | Claude | Build `pipeline/run-pipeline.sh` for real: sequence the CLI calls, parse JSON between steps, branch on 4a/4b and 5a/5b, checkpoint to git. |
+| 2 | Claude | ✅ Built. `pipeline/run-pipeline.sh` sequences the CLI calls, parses JSON between steps, branches on 4a/4b, checkpoints to git. See section 10 for what changed from the Phase 1 design along the way. |
 | 3 | Owner | First unattended run end to end — confirm it either auto-finalizes or flags, and that the push notification actually arrives. |
 | 4 | Claude | Harden: retries/timeouts around headless CLI calls, clearer errors, a switch to Vertex if Antigravity's free tier gets rate-limited. |
 | later | — | Extend the same shape (draft → review → ground → feedback → reconcile → arbitrate) to voiceover, editing, and thumbnails. Not scheduled. |
@@ -124,6 +124,28 @@ With auth fixed, Step 2 produced real review notes: 9 accuracy candidates for gr
 **Two technical accuracy flaws caught at Step 6 — DNS resolution placed in the wrong part of the network.** Scene 7 (and Scene 13's recap of it) described DNS resolution as happening after the request "enters an ISP" — implying it's a deep-network event. It isn't: resolution happens close to the device, via a local/enterprise resolver or one handed out by DHCP, before the request goes anywhere near ISP-core routing. Notably, Scene 3 already had this right ("resolving DNS... is not time spent crossing the internet"), so Scenes 5-7's placement also contradicted the script's own Scene 3. Fixed by moving the DNS-resolution explanation into Scene 5 (alongside DHCP, which typically hands out the resolver address too), leaving Scene 7 with a callback plus its still-valid BGP/interdomain-routing content, and correcting Scene 13's summary line to match. This is exactly the kind of flaw Step 6 exists to catch — both AI reviewers (Claude at Step 2, Codex at Step 4) missed it; only the owner's actual domain expertise found it.
 
 **Result: this draft is versioned `v03`**, one step past what Step 4 produced, to keep the automated Step 1-4 output (`draft-v02.md`) distinct from the owner's Step 6 corrections. Locked into `Projects/Life-of-a-Packet/Shared/LIFE-OF-A-PACKET-MASTER-SCRIPT.md` — matching the naming precedent actually used in `Projects/AI-Agent-Map/Shared/` (`<SLUG>-MASTER-SCRIPT.md`) rather than `PRODUCTION-STRUCTURE.md`'s documented-but-unused `video-slug_asset-type_v01_short-note.ext` pattern, since the real precedent should win over the stale doc. **Phase 1 is complete.**
+
+## 10. Phase 2 build notes
+
+`pipeline/run-pipeline.sh` is now a real orchestrator, not the placeholder. What changed from the Phase 1 design along the way:
+
+**Tooling**: neither `jq` nor `yq` was installed on this Mac (only `python3`) — installed both via Homebrew (`yq` here is the Go/mikefarah build, `.path` syntax, not the Python one that wraps `jq`), plus `coreutils` for `gtimeout` — macOS's BSD userland has no `timeout` at all, and every CLI call in this pipeline needed one to avoid an unattended run hanging forever.
+
+**Step 2.5 collapsed into Step 3, not bash.** Rather than force Step 2's freeform review notes into structured JSON just so bash could loop over accuracy candidates and shell out to `agy -p` itself, Step 3's `claude -p` call (already given Bash access to write `feedback.json`) grounds each candidate itself — reading Step 2's notes, deciding what's worth checking, invoking `agy -p` per claim, then writing the fully-grounded file. `pipeline/prompts/03-claude-feedback.md` was rewritten accordingly. From bash's side, Steps 2.5 and 3 are just: capture Step 2's stdout to a file → feed it into one Step 3 call → read back `feedback.json`.
+
+**Git checkpointing follows section 5's existing design, not a new invention**: a new `pipeline/prompts/checkpoint.md` handles the small dedicated Claude call that commits+pushes after each Codex step (1 and 4); Claude's own steps (2 producing no file, 3, 5) checkpoint inline within their own turn — Step 5's prompt already documented this and needed no change there; Step 3's prompt gained explicit checkpoint instructions since it didn't have any before.
+
+**`pipeline/prompts/04-codex-reconcile.md` was too terse to run unattended** — the version used in Phase 1's actual hand-run had substantially more detail (explicit schema references, output paths, guidance on grounded-vs-ungrounded points) filled in ad hoc at the time. Rewritten to be self-sufficient.
+
+**Notification is bash-level, deterministic, not something a headless `claude -p` call claims to do itself.** `pipeline.yaml`'s `notify.unattended` (was `status: not_built`) is now an `osascript` call inside `run-pipeline.sh`, firing at two points: episode ready for owner review, and a point getting flagged. Step 5's prompt previously implied it sends a push notification itself — corrected, since a headless subprocess can't reliably call an interactive-only tool; it now just makes sure `decision.json` carries everything needed for whatever's driving the run to surface it.
+
+**Found and fixed a real prerequisite that had been sitting open**: section 7's `END-TO-END-WORKFLOW.md` doc conflict (Claude drafting end-to-end, no Codex) was flagged "do this before Phase 2" back in Phase 1 but never actually done. Fixed now — see section 7.
+
+**Bash correctness choices worth remembering**: `local x; x=$(cmd)` always split across two lines, never combined — `set -e` only sees `local`'s own exit status otherwise, silently swallowing a failed `codex`/`claude`/`agy` call. Step 2's raw notes get concatenated into Step 3's prompt via `cat file1 file2 | claude -p`, never string-interpolated — unpredictable AI-generated prose could contain `$`, backticks, or `!` that a shell would happily interpret. Template substitution (topic/notes into Step 1's prompt) uses bash parameter expansion, not `sed`, since `sed`'s replacement string treats `&`/`\1` specially and owner-supplied notes could contain either.
+
+**Still not built, deliberately** (matches the phased project plan, not an oversight): retry logic beyond the `gtimeout` cap, full JSON Schema validation (jq structural checks only — required keys present, arrays non-empty), Step 6 automation (the script stops after notifying; the owner's read/edit/lock-to-`Shared/` stays the Phase 1 manual process), resuming a partial run.
+
+Verification (syntax check, then a real end-to-end smoke test — there's no way to mock `codex exec`/`claude -p`/`agy -p`) is next, once the Homebrew install finishes.
 
 ---
 

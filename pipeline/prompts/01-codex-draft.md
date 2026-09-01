@@ -26,3 +26,7 @@ Flag any claim you are not fully confident in with `[UNVERIFIED: ...]` inline â€
 ## Output format
 
 Plain markdown. Scene headings as `## Scene N`. No JSON at this step â€” JSON starts at Step 3.
+
+## Task
+
+Write the draft now and save it to `Projects/<slug>/Codex/draft-v01.md`.

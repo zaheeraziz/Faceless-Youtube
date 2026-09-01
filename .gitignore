@@ -24,3 +24,9 @@ Projects/*/Production/**/*.m4a
 Projects/*/Production/**/frames*/
 !Projects/*/Production/**/.gitkeep
 !Projects/*/Production/**/*.md
+
+# Coverage Desk pipeline scratch files — rendered prompts and Step 2's
+# freeform notes, written by run-pipeline.sh, never a repo deliverable.
+Projects/*/Codex/.step*.txt
+Projects/*/Claude/.step*.txt
+Projects/*/Claude/.checkpoint*.txt

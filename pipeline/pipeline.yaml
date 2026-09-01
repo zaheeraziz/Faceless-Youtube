@@ -6,8 +6,12 @@
 models:
   draft: codex            # Step 1  — codex exec
   review: claude           # Step 2  — claude -p
-  ground: antigravity      # Step 2.5 — agy -p   (fallback: vertex-gemini)
-  feedback: claude         # Step 3  — claude -p
+  ground: antigravity      # Step 2.5 — agy -p, invoked BY Step 3's claude -p
+                            # call itself (not a separate orchestrated step —
+                            # run-pipeline.sh never calls agy -p directly;
+                            # Claude decides which claims to ground and calls
+                            # agy -p via its own Bash tool). Fallback: vertex-gemini.
+  feedback: claude         # Step 3  — claude -p --allowedTools "Bash,Read,Write,Edit"
   reconcile: codex         # Step 4  — codex exec
   arbitrate: claude        # Step 5  — claude -p --allowedTools "Bash,Read,Edit"
 
@@ -31,12 +35,19 @@ cli:
     enabled: false   # flip on if antigravity's free tier gets rate-limited at volume
 
 timeouts_seconds:
+  # Enforced in run-pipeline.sh via `gtimeout` (coreutils) — macOS's BSD
+  # `timeout` doesn't exist, so `brew install coreutils` is required.
   draft: 300
   review: 180
-  ground_per_claim: 60
-  feedback: 120
+  feedback: 600   # Step 2.5 no longer runs separately (see models.ground
+                   # below) — Step 3's claude -p call grounds each accuracy
+                   # candidate itself via agy -p inside its own turn, so this
+                   # timeout has to cover the base work plus every grounding
+                   # call, not just feedback.json authoring.
   reconcile: 240
-  arbitrate: 120
+  arbitrate: 300   # bumped from 120 — Step 5 also self-checkpoints
+                    # (commit + push) and can open a PR-as-flag on a 5b
+  checkpoint: 120
 
 notify:
   # Two events trigger a notification: a Step 5b flag (Codex/Claude disagree
@@ -49,15 +60,17 @@ notify:
     # desktop notification, plus phone push if Remote Control is connected.
     method: push_notification_tool
   unattended:
-    # Phase 2 (run-pipeline.sh running standalone, no live Claude session
-    # to call a tool from): NOT YET BUILT. Planned approach is a native
-    # macOS notification fired by the orchestrator itself, independent of
-    # any Claude session being alive — e.g. `osascript -e 'display
-    # notification "..." with title "Coverage Desk"'`. Phone delivery while
-    # away from the Mac would need a separate lightweight channel on top of
-    # that (not decided) — a Phase 2 design task, not solved yet.
-    method: macos_notification   # planned, not implemented
-    status: not_built
+    # run-pipeline.sh running standalone (no live Claude session to call a
+    # tool from): built in Phase 2. The orchestrator itself fires a native
+    # macOS notification — `osascript -e 'display notification "..." with
+    # title "Coverage Desk"'` — at two deterministic points: episode ready
+    # for owner review, and a point getting flagged after Step 5. This
+    # doesn't depend on any `claude -p` subprocess successfully calling an
+    # interactive-only tool. Phone delivery while away from the Mac would
+    # need a separate lightweight channel on top of this — not built, not
+    # decided.
+    method: macos_notification
+    status: built
 
 paths:
   episode_root: "Projects/{slug}"
