@@ -22,6 +22,40 @@ Status: **Phase 2 built, awaiting first real test run.** `pipeline/run-pipeline.
 | — | owner | Breaks the tie on a 5b flag; that decision resumes the loop | — |
 | 6 | Owner | Final read of the reconciled script (draft v2, or later if arbitration looped) — the last human checkpoint before locking | draft v2 → locked script in `Shared/`, or notes sent back into the loop |
 
+```mermaid
+flowchart TD
+    Start(["Owner: slug + topic + notes"]) --> S1["Step 1 — Codex drafts<br/>draft-v01.md"]
+    S1 --> CP1["Checkpoint — Claude commits + pushes"]
+    CP1 --> S2["Step 2 — Claude reviews<br/>accuracy candidates, language,<br/>pronunciation completeness + correctness"]
+    S2 --> S3["Step 3 — Claude writes feedback.json<br/>self-grounds each accuracy candidate via agy -p<br/>self-checkpoints (commits + pushes)"]
+    S3 --> S4["Step 4 — Codex reconciles<br/>draft-v02.md + decision.json"]
+    S4 --> CP2["Checkpoint — Claude commits + pushes"]
+    CP2 --> D1{"Every point agree? (4a)"}
+    D1 -->|"yes"| Notify1["Notify owner: ready for review"]
+    D1 -->|"no, some disagree (4b)"| S5["Step 5 — Claude arbitrates<br/>self-checkpoints (commits + pushes)"]
+    S5 --> D2{"Any still flagged? (5b)"}
+    D2 -->|"no, all concur (5a)"| Notify1
+    D2 -->|"yes"| Notify2["Notify owner: flagged<br/>PR-as-flag opened"]
+    Notify2 --> OwnerTie["Owner breaks the tie"]
+    OwnerTie -.resumes loop.-> S4
+    Notify1 --> S6["Step 6 — Owner reads draft-v02.md<br/>(the only step not automated)"]
+    S6 --> D3{"Approve?"}
+    D3 -->|"yes"| Lock(["Locked to Shared/<br/>MASTER-SCRIPT.md"])
+    D3 -->|"no, notes"| S4
+
+    classDef codex fill:#fde8d8,stroke:#c96a2e,color:#5a2d0c;
+    classDef claude fill:#e0e9fb,stroke:#3a5fb0,color:#1a2a4a;
+    classDef owner fill:#e6f4ea,stroke:#2f7d4f,color:#12351f;
+    classDef decision fill:#fff6d6,stroke:#b8940a,color:#4a3c05;
+    classDef terminal fill:#f0f0f0,stroke:#666,color:#222;
+
+    class S1,S4 codex;
+    class CP1,CP2,S2,S3,S5 claude;
+    class Start,S6,OwnerTie owner;
+    class D1,D2,D3 decision;
+    class Notify1,Notify2,Lock terminal;
+```
+
 Full prompt text for each step lives in `pipeline/prompts/`. JSON contracts: `pipeline/schemas/feedback.schema.json`, `pipeline/schemas/decision.schema.json`.
 
 **Why Step 6 exists even on a clean all-agree run:** Steps 1-5 can auto-finalize on two AI models agreeing with each other, but agreement isn't the same bar as "an actual person would find this good." `PROJECT-CONTEXT.md` bets the channel's differentiation on real narrative judgment, not just factual accuracy — so the script gets one human read before it locks, regardless of how clean the automated loop was. At roughly 2,200 words for a 13-scene script, that's a 10-20 minute read, not a bottleneck. Claude does a mechanical proofread pass (typos, formatting, dropped words) immediately before handing off, so the owner's read is spent on judgment and tone, not copy-editing.
