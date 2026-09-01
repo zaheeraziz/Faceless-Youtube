@@ -24,12 +24,18 @@ trap 'echo "FAILED at line $LINENO: $BASH_COMMAND" >&2' ERR
 # ---- config -----------------------------------------------------------
 
 TIMEOUT_DRAFT=300
-TIMEOUT_REVIEW=180
-TIMEOUT_FEEDBACK=600   # Step 3 now runs Step 2.5's agy -p grounding calls
-                        # itself, one per accuracy candidate — needs real room
-TIMEOUT_RECONCILE=240
-TIMEOUT_ARBITRATE=300  # includes Step 5's own git commit+push, and a
-                        # possible PR-as-flag on a 5b
+TIMEOUT_REVIEW=420      # bumped from 180 after a real run: a dense, longer
+                         # topic plus the pronunciation completeness/
+                         # correctness scan (checks every abbreviation
+                         # individually) took over 180s and got killed
+                         # mid-review, aborting the whole pipeline run
+TIMEOUT_FEEDBACK=900    # Step 3 now runs Step 2.5's agy -p grounding calls
+                         # itself, one per accuracy candidate — bumped from
+                         # 600 for the same reason as TIMEOUT_REVIEW: a denser
+                         # topic means more candidates to potentially ground
+TIMEOUT_RECONCILE=360   # bumped from 240 for the same reason
+TIMEOUT_ARBITRATE=420   # bumped from 300 — includes Step 5's own git
+                         # commit+push, and a possible PR-as-flag on a 5b
 TIMEOUT_CHECKPOINT=120
 
 # Branch every checkpoint/self-checkpointing step pushes to. Defaults to
@@ -245,8 +251,18 @@ notify_owner() {
 # ---- main -----------------------------------------------------------------
 
 main() {
+  local skip_draft=false
+  if [[ "${*: -1}" == "--skip-draft" ]]; then
+    skip_draft=true
+    set -- "${@:1:$(($#-1))}"
+  fi
+
   if [[ $# -ne 3 ]]; then
-    echo "Usage: $0 <slug> <topic> <notes>" >&2
+    echo "Usage: $0 <slug> <topic> <notes> [--skip-draft]" >&2
+    echo "  --skip-draft resumes an episode whose draft-v01.md already exists" >&2
+    echo "  and was already committed — e.g. after Step 1 succeeded but a later" >&2
+    echo "  step failed or timed out. topic/notes are still required positionally" >&2
+    echo "  but are unused in this mode." >&2
     exit 1
   fi
 
@@ -254,10 +270,17 @@ main() {
   preflight_check
   paths_init "$slug"
 
-  log "=== Coverage Desk pipeline: $slug (pushing to origin/$PUSH_BRANCH) ==="
+  local resume_note=""
+  [[ "$skip_draft" == true ]] && resume_note=" [resuming from Step 2]"
+  log "=== Coverage Desk pipeline: $slug (pushing to origin/$PUSH_BRANCH)$resume_note ==="
 
-  run_step1_draft "$slug" "$topic" "$notes"
-  run_checkpoint "$slug" "Step 1 — Codex draft (draft-v01.md)"
+  if [[ "$skip_draft" == true ]]; then
+    check_file_exists "$CODEX_DIR/draft-v01.md" "Resume (--skip-draft)"
+    log "Skipping Step 1 — draft-v01.md already exists, assumed already committed"
+  else
+    run_step1_draft "$slug" "$topic" "$notes"
+    run_checkpoint "$slug" "Step 1 — Codex draft (draft-v01.md)"
+  fi
 
   run_step2_review "$slug"
   run_step3_feedback "$slug"
