@@ -17,9 +17,13 @@ Given:
 Write:
 
 - One sentence stating the viewer's promise.
-- A 10-20 second opening hook.
+- A 10-20 second opening hook that plants the episode's own title/theme phrase — echo it again in the closing line as a deliberate bookend, don't let the title be something that only appears in the file header.
 - The full narration script, scene by scene.
 - On-screen text and pronunciation notes where relevant.
+
+**Length is a hard constraint, not a style preference** (see `PROJECT-CONTEXT.md`): target 5 minutes of finished video, roughly 650-700 narration words at a deliberate educational pace (~130-140 wpm). Count only spoken narration, not on-screen text or visual direction. Write to this budget from the start — pick the strongest through-line and cut everything else, rather than covering every possible angle and expecting a later pass to trim it down. If the topic has more material than fits, that's a prioritization problem to solve now, not a reason to run long.
+
+Every acronym or abbreviation you introduce must be expanded in narration the first time it's used (e.g. "NAT — Network Address Translation") — a pronunciation note tells the narrator how to *say* it, not what it *means*, and the audience shouldn't have to already know the jargon.
 
 Flag any claim you are not fully confident in with `[UNVERIFIED: ...]` inline — do not silently smooth over uncertainty. Do not fabricate sources, dates, quotes, or statistics. If you don't know, say so inline rather than guessing.
 

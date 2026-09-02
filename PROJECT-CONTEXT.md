@@ -18,6 +18,7 @@ Build a faceless educational YouTube business primarily monetized through ads. A
 - Claude must create the thumbnail concepts and finished thumbnail variants; do not make Canva part of the core workflow.
 - Claude must perform the final text-based video edit through the code-based project; do not make Descript part of the core workflow.
 - Every episode must pass an independent second-model audit using Gemini or OpenAI for factual quality, copyright risk, and overall quality before publication.
+- Non-entertainment/educational videos target **5 minutes maximum** (roughly 650-700 narration words at a deliberate pace). Two reasons, both hard constraints, not style preferences: realistic attention span for this kind of content, and per-episode cost — external services (narration, rendering) scale with runtime, so longer videos cost meaningfully more to produce. Scripts should be written to this length from the first draft, not trimmed after the fact.
 - Each technical/AI episode should create two assets: a video for audience growth and a GitHub artifact for owner visibility. When appropriate, include a small build-along project or viewer challenge that helps learners practice the concept and invites them to share their work publicly.
 - If an episode has a GitHub project, include an early hook that tells viewers the project is available, invites them to build their own version, and asks them to share/comment with what they changed.
 

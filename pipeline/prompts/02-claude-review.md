@@ -19,6 +19,12 @@ Review the draft for two things: factual accuracy and language (pacing, clarity,
 
 If you're not confident which way a specific abbreviation goes, send it to Step 2.5 as a grounding candidate rather than guessing — this is a checkable fact, not a judgment call.
 
+**Acronym expansion:** separate from pronunciation (which is *how* to say it) — check that every acronym/abbreviation used in narration is actually expanded in words the first time it appears (e.g. "NAT — Network Address Translation"). A pronunciation note doesn't tell the viewer what the term means. Flag any acronym that's spoken correctly but never defined.
+
+**Length:** count narration words only (not on-screen text or visual direction). The hard budget is ~650-700 words (~5 minutes at a deliberate educational pace) — see `PROJECT-CONTEXT.md`. If the draft runs meaningfully over, this is not a minor style note — flag it as a priority language point naming the actual word count and the overage, since it drives a real structural cut at Step 4, not a line edit.
+
+**Title/theme bookend:** check that the episode's own title or theme phrase (not just a loosely similar idea) is explicitly spoken in both the opening hook and the closing line. If it only appears in the file header/title and never in narration, flag it.
+
 Do not rewrite the script yourself at this step — produce notes, not prose. The itemized `feedback.json` gets written at Step 3, after grounding.
 
 ## Task
